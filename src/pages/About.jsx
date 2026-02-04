@@ -4,6 +4,10 @@ import Section from '../components/ui/Section';
 import Card from '../components/ui/Card';
 import { Target, Eye, Users, Briefcase, Award, TrendingUp, Newspaper } from 'lucide-react';
 import aboutEndCollage from '../assets/about-end-collage.png';
+import shveta from '../assets/shveta.jpg';
+import sinhali from '../assets/sinhali.jpg';
+import shameen from '../assets/shameen.jpg';
+import sri from '../assets/sri.jpg';
 
 const mediaOutlets = [
     "Mid-day", "Sakal Times", "India Today", "BW Education", "Deccan Herald", "Entrepreneur India",
@@ -14,10 +18,10 @@ const mediaOutlets = [
 ];
 
 const leadership = [
-    { name: "Shveta Raina", role: "Founder and CEO", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Shveta" },
-    { name: "Sinhali Deshpande", role: "Head – Curriculum", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sinhali" },
-    { name: "Shameen Bajaj", role: "Mentorship", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Shameen" },
-    { name: "Sri Sudharsan", role: "Business Operations", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sri" },
+    { name: "Shveta Raina", role: "Founder and CEO", image: shveta },
+    { name: "Sinhali Deshpande", role: "Head – Curriculum", image: sinhali },
+    { name: "Shameen Bajaj", role: "Mentorship", image: shameen },
+    { name: "Sri Sudharsan", role: "Business Operations", image: sri },
 ];
 
 const advisors = [
