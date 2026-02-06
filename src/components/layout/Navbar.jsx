@@ -32,7 +32,7 @@ const Navbar = () => {
             <div className="container mx-auto px-4 flex justify-between items-center">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2">
-                    <img src="/logo.jpg" alt="Talerang Logo" className="h-12 w-auto object-contain" />
+                    <img src="/talerang-full-logo.jpg" alt="Talerang Logo" className="h-12 w-auto object-contain" />
                 </Link>
 
                 {/* Desktop Nav */}
@@ -46,8 +46,13 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link to="/admin-login">
+                        <Button variant="ghost" className="px-5 py-2 text-sm font-medium">
+                            Admin
+                        </Button>
+                    </Link>
                     <Link to="/contact">
-                        <Button variant="secondary" className="px-5 py-2 text-sm">
+                        <Button variant="primary" className="px-5 py-2 text-sm">
                             Sign In
                         </Button>
                     </Link>
@@ -75,8 +80,13 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link to="/admin-login">
+                        <Button variant="ghost" className="w-full justify-center">
+                            Admin
+                        </Button>
+                    </Link>
                     <Link to="/contact">
-                        <Button variant="secondary" className="w-full justify-center">
+                        <Button variant="primary" className="w-full justify-center">
                             Sign In
                         </Button>
                     </Link>

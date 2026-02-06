@@ -5,7 +5,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'luc
 
 const Footer = () => {
     return (
-        <footer className="bg-slate-900 text-white pt-16 pb-8">
+        <footer className="bg-secondary text-white pt-16 pb-8">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
                     {/* Brand */}
@@ -34,7 +34,7 @@ const Footer = () => {
 
                     {/* Links 1 */}
                     <div>
-                        <h4 className="text-lg font-heading font-bold mb-6 text-secondary">Programs</h4>
+                        <h4 className="text-lg font-heading font-bold mb-6 text-white">Programs</h4>
                         <ul className="space-y-3">
                             <li><Link to="/programs" className="text-slate-400 hover:text-white transition-colors">Future CEOs</Link></li>
                             <li><Link to="/programs" className="text-slate-400 hover:text-white transition-colors">Young Leaders Academy</Link></li>

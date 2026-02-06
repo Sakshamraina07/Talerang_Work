@@ -31,7 +31,7 @@ const Home = () => {
                                 </span>
                                 Admissions Open for 2026 Batch
                             </div>
-                            <h1 className="text-4xl lg:text-6xl font-heading font-bold text-dark leading-tight mb-6">
+                            <h1 className="text-4xl lg:text-6xl font-heading font-bold text-secondary leading-tight mb-6">
                                 Launch Your Career with <span className="text-primary italic">Confidence</span>
                             </h1>
                             <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
@@ -99,23 +99,23 @@ const Home = () => {
             </section>
 
             {/* Stats Section */}
-            <section className="py-10 bg-primary text-white">
+            <section className="py-10 bg-secondary text-white">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/10">
                         <div>
-                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-secondary">500k+</div>
+                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-white">500k+</div>
                             <div className="text-indigo-100 text-sm">Learners Impacted</div>
                         </div>
                         <div>
-                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-secondary">400+</div>
+                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-white">400+</div>
                             <div className="text-indigo-100 text-sm">Corporate Partners</div>
                         </div>
                         <div>
-                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-secondary">94%</div>
+                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-white">94%</div>
                             <div className="text-indigo-100 text-sm">Placement Rate</div>
                         </div>
                         <div>
-                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-secondary">10+</div>
+                            <div className="text-3xl md:text-4xl font-heading font-bold mb-1 text-white">10+</div>
                             <div className="text-indigo-100 text-sm">Years of Experience</div>
                         </div>
                     </div>

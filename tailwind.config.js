@@ -7,8 +7,8 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: "#4F46E5", // Royal Blue
-                secondary: "#FACC15", // Vibrant Yellow
+                primary: "#D32F2F", // Brand Red
+                secondary: "#1E3A8A", // Dark Blue
                 dark: "#0F172A", // Slate 900
                 light: "#F3F4F6", // Gray 100
                 muted: "#64748B", // Slate 500
