@@ -8,6 +8,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import TalerangQuizPage from './pages/TalerangQuizPage';
 import ScrollToTop from './components/layout/ScrollToTop';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/assessment" element={<TalerangQuizPage />} />
       </Routes>
     </Router>
   );
