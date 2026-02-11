@@ -46,6 +46,11 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link to="/assessment">
+                        <Button variant="outline" className="px-5 py-2 text-sm font-medium border-secondary text-secondary hover:bg-secondary/10">
+                            Assessment
+                        </Button>
+                    </Link>
                     <Link to="/admin-login">
                         <Button variant="ghost" className="px-5 py-2 text-sm font-medium">
                             Admin
@@ -80,6 +85,11 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link to="/assessment">
+                        <Button variant="outline" className="w-full justify-center border-secondary text-secondary">
+                            Assessment
+                        </Button>
+                    </Link>
                     <Link to="/admin-login">
                         <Button variant="ghost" className="w-full justify-center">
                             Admin
