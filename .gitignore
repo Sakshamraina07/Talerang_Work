@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Server
+server/credentials.json
+server/database.sqlite
+server/node_modules
