@@ -8,13 +8,24 @@ const SHEET_ID = '1DfLdFRdJhbFTzvDGMrSM-B81cTgv2348lyfj7RPnfeI';
 
 const syncToSheets = async (users) => {
     const credentialsPath = path.join(__dirname, 'credentials.json');
+    let creds;
 
-    // 1. Check for credentials
-    if (!fs.existsSync(credentialsPath)) {
-        throw new Error('credentials.json not found. Please add your Service Account key to the server folder.');
+    // 1. Load Credentials (Env Variable OR File)
+    if (process.env.GOOGLE_CREDENTIALS) {
+        try {
+            creds = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+        } catch (error) {
+            console.error("Failed to parse GOOGLE_CREDENTIALS env var:", error);
+        }
     }
 
-    const creds = require(credentialsPath);
+    if (!creds && fs.existsSync(credentialsPath)) {
+        creds = require(credentialsPath);
+    }
+
+    if (!creds) {
+        throw new Error('Google Credentials not found. Set GOOGLE_CREDENTIALS env var OR add credentials.json');
+    }
 
     // 2. Auth
     const serviceAccountAuth = new JWT({
