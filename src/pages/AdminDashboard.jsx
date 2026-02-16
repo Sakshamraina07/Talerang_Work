@@ -1,13 +1,54 @@
+import React, { useState, useEffect } from 'react';
 import { quizModules } from '../data/quizData';
-
-// ... (imports remain)
+import { LayoutDashboard, LogOut, Search, ExternalLink, Loader } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
-    // ... (state and effects remain)
+    const [users, setUsers] = useState([]);
+    const [search, setSearch] = useState('');
+    const [loading, setLoading] = useState(true);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
-    // ... (handleSyncSheets remain)
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-    // ... (filteredUsers remain)
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const res = await fetch(`${API_URL}/api/admin/users`);
+            if (res.ok) {
+                const data = await res.json();
+                setUsers(data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch users", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSyncSheets = async () => {
+        try {
+            const res = await fetch(`${API_URL}/api/admin/sync-sheets`, { method: 'POST' });
+            if (res.ok) {
+                alert('Synced to Google Sheets successfully!');
+            } else {
+                alert('Sync failed.');
+            }
+        } catch (error) {
+            console.error("Sync error", error);
+            alert('Sync failed due to network error.');
+        }
+    };
+
+    const filteredUsers = users.filter(u =>
+        u.name.toLowerCase().includes(search.toLowerCase()) ||
+        u.email.toLowerCase().includes(search.toLowerCase())
+    );
 
     // Helper to get score for a specific module
     const getModuleScore = (user, moduleId) => {
@@ -15,9 +56,10 @@ const AdminDashboard = () => {
         return progress ? progress.score : '-';
     };
 
+    if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader className="w-8 h-8 animate-spin text-primary" /></div>;
+
     return (
         <div className="min-h-screen bg-slate-50 font-sans">
-            {/* ... (Header remains) */}
             <header className="bg-white shadow-sm sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -32,7 +74,7 @@ const AdminDashboard = () => {
                 </div>
             </header>
 
-            <main className="max-w-[95%] mx-auto px-4 py-8"> {/* Increased width for more columns */}
+            <main className="max-w-[95%] mx-auto px-4 py-8">
                 {/* Stats / Controls */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                     <div className="relative w-full md:w-96">

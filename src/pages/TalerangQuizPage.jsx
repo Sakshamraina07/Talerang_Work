@@ -27,10 +27,13 @@ const TalerangQuizPage = () => {
     // Assessment Runtime State
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
     const [currentAnswers, setCurrentAnswers] = useState({});
+
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     // Initial Fetch
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:5000/api/user/${user.id}/progress`)
+            fetch(`${API_URL}/api/user/${user.id}/progress`)
                 .then(res => {
                     if (!res.ok) {
                         if (res.status === 404) {
@@ -133,7 +136,7 @@ const TalerangQuizPage = () => {
 
         // API Save
         try {
-            await fetch('http://localhost:5000/api/quiz/progress', {
+            await fetch(`${API_URL}/api/quiz/progress`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -147,7 +150,7 @@ const TalerangQuizPage = () => {
             // Also unlock next module in DB
             if (currentIndex < quizModules.length - 1) {
                 const nextModuleId = quizModules[currentIndex + 1].id;
-                await fetch('http://localhost:5000/api/quiz/progress', {
+                await fetch(`${API_URL}/api/quiz/progress`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
