@@ -1,8 +1,12 @@
 const { Sequelize } = require('sequelize');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 // Check for DATABASE_URL environment variable (Provided by Render/Vercel/Neon)
+console.log("Loading .env from:", path.join(__dirname, '../.env'));
 const databaseUrl = process.env.DATABASE_URL;
+console.log("DATABASE_URL found:", !!databaseUrl);
+if (databaseUrl) console.log("DATABASE_URL starts with:", databaseUrl.substring(0, 10));
 
 let sequelize;
 

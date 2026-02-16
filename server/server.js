@@ -63,6 +63,11 @@ app.post('/api/auth/login', async (req, res) => {
 // 2. Get User Progress
 app.get('/api/user/:userId/progress', async (req, res) => {
     try {
+        const userExists = await User.findByPk(req.params.userId);
+        if (!userExists) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
         const progress = await ModuleProgress.findAll({ where: { userId: req.params.userId } });
 
         // Convert array to object map for frontend

@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const TalerangQuizPage = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth(); // Destructure logout
     // State
     const [view, setView] = useState('dashboard'); // dashboard, module-intro, assessment, results
     const [activeModuleId, setActiveModuleId] = useState(null);
@@ -27,13 +27,24 @@ const TalerangQuizPage = () => {
     // Assessment Runtime State
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
     const [currentAnswers, setCurrentAnswers] = useState({});
-
     // Initial Fetch
     useEffect(() => {
         if (user) {
             fetch(`http://localhost:5000/api/user/${user.id}/progress`)
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) {
+                        if (res.status === 404) {
+                            console.warn("User not found in DB. Logging out.");
+                            logout(); // Validation Failed
+                            return null;
+                        }
+                        throw new Error("Failed to fetch progress");
+                    }
+                    return res.json();
+                })
                 .then(data => {
+                    if (!data) return; // Stopped by logout
+
                     const initialStatus = {};
                     const initialScores = data.scores || {};
 

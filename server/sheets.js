@@ -45,50 +45,74 @@ const syncToSheets = async (users) => {
         { id: 'module_6', title: 'Final Skills' }
     ];
 
-    // 5. Prepare Data
-    const rows = users.map(user => {
+    // 6. Sync Logic (Update existing, Append new)
+
+    // Ensure headers exist
+    const headers = ['Name', 'Email', 'Phone', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
+    try {
+        await sheet.loadHeaderRow(); // Try loading existing headers
+    } catch (e) {
+        // If sheet is empty or has no headers, set them
+        await sheet.setHeaderRow(headers);
+    }
+
+    const existingRows = await sheet.getRows();
+    const emailToRowMap = new Map();
+
+    existingRows.forEach(row => {
+        const email = row.get('Email');
+        if (email) emailToRowMap.set(email, row);
+    });
+
+    const newRows = [];
+
+    for (const user of users) {
+        // Calculate Data
         let totalScore = 0;
         let completedModules = 0;
         const moduleScores = {};
 
-        // Initialize all module scores to 0
+        // Initialize scores
         modules.forEach(m => moduleScores[m.title] = 0);
 
-        // Calculate score
         if (user.ModuleProgresses) {
             user.ModuleProgresses.forEach(mp => {
                 const foundModule = modules.find(m => m.id === mp.moduleId);
-                // If we know the module title, save the score under that title
                 if (foundModule) {
                     moduleScores[foundModule.title] = mp.score || 0;
                 }
-
                 totalScore += (mp.score || 0);
                 if (mp.status === 'completed') completedModules++;
             });
         }
 
-        return {
+        const userData = {
             Name: user.name,
             Email: user.email,
             Phone: user.phone,
             'Login Time': user.loginTime ? new Date(user.loginTime).toLocaleString() : '',
-            ...moduleScores, // Spread individual module scores here
+            ...moduleScores,
             'Total Score': totalScore,
             'Completed Modules': completedModules,
         };
-    });
 
-    // 6. Write Headers & Rows
-    await sheet.clear(); // Clear old data
+        if (emailToRowMap.has(user.email)) {
+            // Update Existing Row
+            const row = emailToRowMap.get(user.email);
+            row.assign(userData);
+            await row.save(); // Save individual row update
+        } else {
+            // Prepare for Bulk Insert
+            newRows.push(userData);
+        }
+    }
 
-    // Construct Headers dynamically
-    const headers = ['Name', 'Email', 'Phone', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
+    // Append new users
+    if (newRows.length > 0) {
+        await sheet.addRows(newRows);
+    }
 
-    await sheet.setHeaderRow(headers);
-    await sheet.addRows(rows);
-
-    return { title: doc.title, rowCount: rows.length };
+    return { title: doc.title, rowCount: users.length };
 };
 
 module.exports = { syncToSheets };
