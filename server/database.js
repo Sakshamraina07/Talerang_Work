@@ -1,32 +1,21 @@
 const { Sequelize } = require("sequelize");
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
-const databaseUrl = process.env.DATABASE_URL;
-
-let sequelize;
-
-if (databaseUrl) {
-    console.log("🔥 Connecting to PostgreSQL (Supabase Pooler)...");
-
-    sequelize = new Sequelize(databaseUrl, {
+const sequelize = new Sequelize(
+    "postgres",                         // database
+    "postgres.aiqplcebmybwlsamqbzi",     // username
+    "Sakshamraina@123",                 // original password (NOT encoded here)
+    {
+        host: "aws-1-ap-southeast-1.pooler.supabase.com",
+        port: 5432,
         dialect: "postgres",
         logging: false,
         dialectOptions: {
             ssl: {
                 require: true,
-                rejectUnauthorized: false, // ✅ allows self-signed cert (Supabase fix)
+                rejectUnauthorized: false,
             },
         },
-    });
-} else {
-    console.log("🟢 Connecting to local SQLite...");
-
-    sequelize = new Sequelize({
-        dialect: "sqlite",
-        storage: path.join(__dirname, "database.sqlite"),
-        logging: false,
-    });
-}
+    }
+);
 
 module.exports = sequelize;
