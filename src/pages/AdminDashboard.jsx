@@ -1,72 +1,126 @@
+import { quizModules } from '../data/quizData';
 
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/layout/Layout';
-import Button from '../components/ui/Button';
-import { LogOut, LayoutDashboard, Users, FileText, Settings } from 'lucide-react';
-import Card from '../components/ui/Card';
+// ... (imports remain)
 
 const AdminDashboard = () => {
-    const navigate = useNavigate();
+    // ... (state and effects remain)
 
-    const handleLogout = () => {
-        navigate('/');
+    // ... (handleSyncSheets remain)
+
+    // ... (filteredUsers remain)
+
+    // Helper to get score for a specific module
+    const getModuleScore = (user, moduleId) => {
+        const progress = user.ModuleProgresses?.find(mp => mp.moduleId === moduleId);
+        return progress ? progress.score : '-';
     };
 
-    const stats = [
-        { label: 'Total Users', value: '12,345', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-        { label: 'Applications', value: '458', icon: FileText, color: 'text-green-600', bg: 'bg-green-50' },
-        { label: 'Active Programs', value: '8', icon: LayoutDashboard, color: 'text-purple-600', bg: 'bg-purple-50' },
-    ];
-
     return (
-        <div className="min-h-screen bg-slate-50">
-            {/* Admin Header */}
-            <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-bold">
-                            AL
-                        </div>
-                        <div>
-                            <h1 className="font-heading font-bold text-lg leading-tight">Admin Dashboard</h1>
-                            <p className="text-xs text-slate-500">Welcome back, Admin</p>
-                        </div>
+        <div className="min-h-screen bg-slate-50 font-sans">
+            {/* ... (Header remains) */}
+            <header className="bg-white shadow-sm sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <LayoutDashboard className="w-6 h-6 text-primary" />
+                        <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1>
                     </div>
-                    <Button variant="ghost" onClick={handleLogout} className="text-slate-500 gap-2">
-                        <LogOut size={18} /> Logout
-                    </Button>
+                    <div>
+                        <button onClick={logout} className="text-sm font-medium text-gray-500 hover:text-red-600 flex items-center gap-2">
+                            <LogOut className="w-4 h-4" /> Logout
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            <main className="container mx-auto px-4 py-8">
-                {/* Stats Grid */}
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                            <div className={`w-14 h-14 ${stat.bg} rounded-xl flex items-center justify-center ${stat.color}`}>
-                                <stat.icon size={28} />
-                            </div>
-                            <div>
-                                <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
-                                <p className="text-2xl font-bold text-dark">{stat.value}</p>
-                            </div>
-                        </div>
-                    ))}
+            <main className="max-w-[95%] mx-auto px-4 py-8"> {/* Increased width for more columns */}
+                {/* Stats / Controls */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                    <div className="relative w-full md:w-96">
+                        <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search users..."
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                    <div className="flex gap-2 w-full md:w-auto">
+                        <button
+                            onClick={handleSyncSheets}
+                            className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition w-full md:w-auto justify-center shadow-sm"
+                        >
+                            <LayoutDashboard className="w-4 h-4" /> Sync to Sheets
+                        </button>
+                        <a
+                            href="https://docs.google.com/spreadsheets/d/1DfLdFRdJhbFTzvDGMrSM-B81cTgv2348lyfj7RPnfeI/edit?usp=sharing"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition w-full md:w-auto justify-center shadow-sm"
+                        >
+                            <ExternalLink className="w-4 h-4" /> Open Sheet
+                        </a>
+                    </div>
                 </div>
 
-                {/* Placeholder Content */}
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-12 text-center">
-                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
-                        <Settings size={40} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-dark mb-2">Dashboard Ready</h2>
-                    <p className="text-slate-500 max-w-md mx-auto mb-8">
-                        This is a placeholder dashboard. You can now build out the admin features like user management, content updates, and analytics.
-                    </p>
-                    <div className="flex justify-center gap-4">
-                        <Button variant="outline">Manage Users</Button>
-                        <Button variant="primary">Create Post</Button>
+                {/* Table */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left bg-white whitespace-nowrap">
+                            <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider font-semibold border-b border-gray-100">
+                                <tr>
+                                    <th className="p-4 sticky left-0 bg-gray-50 z-10">Name</th>
+                                    <th className="p-4">Contact</th>
+                                    <th className="p-4">Login Time</th>
+                                    {/* Dynamic Module Headers */}
+                                    {quizModules.map(module => (
+                                        <th key={module.id} className="p-4 text-center min-w-[150px]">
+                                            {module.title}
+                                        </th>
+                                    ))}
+                                    <th className="p-4 text-center sticky right-0 bg-gray-50 z-10">Total Score</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {filteredUsers.map(user => {
+                                    // Calculate Stats
+                                    const totalScore = user.ModuleProgresses?.reduce((sum, mp) => sum + (mp.score || 0), 0) || 0;
+
+                                    return (
+                                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="p-4 sticky left-0 bg-white z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                                <div className="font-semibold text-gray-900">{user.name}</div>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="text-sm text-gray-600">{user.email}</div>
+                                                <div className="text-xs text-gray-400">{user.phone}</div>
+                                            </td>
+                                            <td className="p-4 text-sm text-gray-500">
+                                                {user.loginTime ? new Date(user.loginTime).toLocaleString() : '-'}
+                                            </td>
+
+                                            {/* Dynamic Module Scores */}
+                                            {quizModules.map(module => (
+                                                <td key={module.id} className="p-4 text-center text-sm text-gray-600">
+                                                    {getModuleScore(user, module.id)}
+                                                </td>
+                                            ))}
+
+                                            <td className="p-4 text-center font-bold text-gray-900 sticky right-0 bg-white z-10 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                                {totalScore}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                                {filteredUsers.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5 + quizModules.length} className="p-8 text-center text-gray-500">
+                                            No users found.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </main>

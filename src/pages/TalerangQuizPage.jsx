@@ -2,33 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { quizModules } from '../data/quizData';
 import ModuleCard from '../components/quiz/ModuleCard';
 import QuestionCard from '../components/quiz/QuestionCard';
-import ProgressBar from '../components/quiz/ProgressBar';
+import JourneyProgress from '../components/quiz/JourneyProgress';
 import CompetencyReport from '../components/quiz/CompetencyReport';
 import { Share2, ArrowLeft, ArrowRight, Save, Award, AlertCircle, CheckCircle, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { useAuth } from '../context/AuthContext';
+
 const TalerangQuizPage = () => {
+    const { user } = useAuth();
     // State
     const [view, setView] = useState('dashboard'); // dashboard, module-intro, assessment, results
     const [activeModuleId, setActiveModuleId] = useState(null);
     const [activeModuleData, setActiveModuleData] = useState(null);
 
     // Progress State
-    const [moduleStatus, setModuleStatus] = useState(() => {
-        const saved = localStorage.getItem('talerang_module_status');
-        if (saved) return JSON.parse(saved);
-        const initial = {};
-        quizModules.forEach((m, index) => {
-            initial[m.id] = index === 0 ? 'active' : 'locked';
-        });
-        return initial;
-    });
-
-    const [moduleScores, setModuleScores] = useState(() => {
-        const saved = localStorage.getItem('talerang_module_scores');
-        return saved ? JSON.parse(saved) : {};
-    });
-
+    const [moduleStatus, setModuleStatus] = useState({});
+    const [moduleScores, setModuleScores] = useState({});
     const [userAnswers, setUserAnswers] = useState(() => {
         const saved = localStorage.getItem('talerang_user_answers');
         return saved ? JSON.parse(saved) : {};
@@ -38,9 +28,33 @@ const TalerangQuizPage = () => {
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
     const [currentAnswers, setCurrentAnswers] = useState({});
 
-    // Persistence Effects
-    useEffect(() => { localStorage.setItem('talerang_module_status', JSON.stringify(moduleStatus)); }, [moduleStatus]);
-    useEffect(() => { localStorage.setItem('talerang_module_scores', JSON.stringify(moduleScores)); }, [moduleScores]);
+    // Initial Fetch
+    useEffect(() => {
+        if (user) {
+            fetch(`http://localhost:5000/api/user/${user.id}/progress`)
+                .then(res => res.json())
+                .then(data => {
+                    const initialStatus = {};
+                    const initialScores = data.scores || {};
+
+                    quizModules.forEach((m, index) => {
+                        // Default to locked if not found, or active if first
+                        const dbStatus = data.status[m.id];
+                        if (dbStatus) {
+                            initialStatus[m.id] = dbStatus;
+                        } else {
+                            initialStatus[m.id] = index === 0 ? 'active' : 'locked';
+                        }
+                    });
+
+                    setModuleStatus(initialStatus);
+                    setModuleScores(initialScores);
+                })
+                .catch(err => console.error("Error fetching progress", err));
+        }
+    }, [user]);
+
+    // Persistence Effects (Local for answers only as backup)
     useEffect(() => { localStorage.setItem('talerang_user_answers', JSON.stringify(userAnswers)); }, [userAnswers]);
 
     // Derived Values
@@ -77,7 +91,7 @@ const TalerangQuizPage = () => {
         }
     };
 
-    const finishModule = () => {
+    const finishModule = async () => {
         let totalScore = 0;
         activeModuleData.sections.forEach(section => {
             section.questions.forEach(q => {
@@ -89,10 +103,14 @@ const TalerangQuizPage = () => {
         });
 
         const newScores = { ...moduleScores, [activeModuleId]: totalScore };
+        const newStatus = { ...moduleStatus, [activeModuleId]: 'completed' };
+
+        // Optimistic Update
         setModuleScores(newScores);
+        setModuleStatus(newStatus);
         setUserAnswers(prev => ({ ...prev, ...currentAnswers }));
 
-        const newStatus = { ...moduleStatus, [activeModuleId]: 'completed' };
+        // Unlock Next
         const currentIndex = quizModules.findIndex(m => m.id === activeModuleId);
         if (currentIndex < quizModules.length - 1) {
             const nextModuleId = quizModules[currentIndex + 1].id;
@@ -100,8 +118,39 @@ const TalerangQuizPage = () => {
                 newStatus[nextModuleId] = 'active';
             }
         }
-
         setModuleStatus(newStatus);
+
+        // API Save
+        try {
+            await fetch('http://localhost:5000/api/quiz/progress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: user.id,
+                    moduleId: activeModuleId,
+                    score: totalScore,
+                    status: 'completed'
+                })
+            });
+
+            // Also unlock next module in DB
+            if (currentIndex < quizModules.length - 1) {
+                const nextModuleId = quizModules[currentIndex + 1].id;
+                await fetch('http://localhost:5000/api/quiz/progress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        moduleId: nextModuleId,
+                        status: 'active'
+                    })
+                });
+            }
+
+        } catch (err) {
+            console.error("Failed to save progress", err);
+        }
+
         setView('results');
         window.scrollTo(0, 0);
     };
@@ -145,17 +194,31 @@ const TalerangQuizPage = () => {
                 </p>
             </div>
 
-            <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100 mb-12 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-2 h-full bg-primary"></div>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="flex-1">
-                        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-purple-800 mb-2">Overall Progress</h2>
-                        <ProgressBar current={overallProgress} total={100} label="" />
+            <div className="max-w-6xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100 mb-12 relative overflow-hidden">
+                <div className="flex flex-col gap-6">
+                    <div className="flex justify-between items-end">
+                        <div>
+                            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-purple-800 mb-2">Overall Progress</h2>
+                            <p className="text-gray-500">Track your milestones and achievements.</p>
+                        </div>
+                        <div className="text-right">
+                            <span className="text-3xl font-bold text-primary">{overallProgress}%</span>
+                            <span className="text-gray-400 text-sm block">Completed</span>
+                        </div>
                     </div>
+
+                    <div className="py-4">
+                        <JourneyProgress
+                            modules={quizModules}
+                            moduleStatus={moduleStatus}
+                            onModuleClick={handleModuleClick}
+                        />
+                    </div>
+
                     {overallProgress === 100 && (
-                        <div className="bg-green-100 text-green-800 px-6 py-3 rounded-xl flex items-center font-bold animate-bounce">
-                            <Award className="w-6 h-6 mr-2" />
-                            CERTIFIED
+                        <div className="bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-xl flex items-center justify-center font-bold animate-bounce shadow-sm">
+                            <Award className="w-8 h-8 mr-3 text-green-600" />
+                            <span className="text-lg">CONGRATULATIONS! YOU ARE CERTIFIED!</span>
                         </div>
                     )}
                 </div>
