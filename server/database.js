@@ -7,8 +7,7 @@ const databaseUrl = process.env.DATABASE_URL;
 let sequelize;
 
 if (databaseUrl) {
-    // 🔥 Production (Render + Supabase)
-    console.log("Connecting to PostgreSQL...");
+    console.log("🔥 Connecting to PostgreSQL (Supabase Pooler)...");
 
     sequelize = new Sequelize(databaseUrl, {
         dialect: "postgres",
@@ -16,13 +15,12 @@ if (databaseUrl) {
         dialectOptions: {
             ssl: {
                 require: true,
-                rejectUnauthorized: false, // ✅ Fix for self-signed certificate
+                rejectUnauthorized: false, // ✅ allows self-signed cert (Supabase fix)
             },
         },
     });
 } else {
-    // 🟢 Local Development (SQLite)
-    console.log("Connecting to local SQLite...");
+    console.log("🟢 Connecting to local SQLite...");
 
     sequelize = new Sequelize({
         dialect: "sqlite",
