@@ -11,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 
 const TalerangQuizPage = () => {
     const { user, logout } = useAuth(); // Destructure logout
+    console.log("TalerangQuizPage mounted. User:", user);
     // State
     const [view, setView] = useState('dashboard'); // dashboard, module-intro, assessment, results
     const [activeModuleId, setActiveModuleId] = useState(null);
@@ -33,8 +34,10 @@ const TalerangQuizPage = () => {
     // Initial Fetch
     useEffect(() => {
         if (user) {
+            console.log("Fetching progress for user:", user.id);
             fetch(`${API_URL}/api/user/${user.id}/progress`)
                 .then(res => {
+                    console.log("Progress API Response:", res.status);
                     if (!res.ok) {
                         if (res.status === 404) {
                             console.warn("User not found in DB. Logging out.");
@@ -65,6 +68,8 @@ const TalerangQuizPage = () => {
                     setModuleScores(initialScores);
                 })
                 .catch(err => console.error("Error fetching progress", err));
+        } else {
+            console.warn("TalerangQuizPage: No user found in context");
         }
     }, [user]);
 
