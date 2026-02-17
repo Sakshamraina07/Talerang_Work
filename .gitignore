@@ -27,3 +27,4 @@ dist-ssr
 server/credentials.json
 server/database.sqlite
 server/node_modules
+.env

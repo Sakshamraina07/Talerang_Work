@@ -22,6 +22,9 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // DEBUGGING ALERTS - Remove after fixing
+        // alert("Submit clicked - Starting Login Process");
+
         console.log('Form submitted', formData);
         if (!validate()) {
             console.log('Validation failed');
@@ -29,28 +32,52 @@ const LoginPage = () => {
         }
 
         setLoading(true);
+        setErrors({});
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+        const slowConnectionTimer = setTimeout(() => {
+            setErrors(prev => ({ ...prev, info: "Waking up server... this may take up to a minute for the first time." }));
+        }, 2000);
+
         try {
             const API_URL = import.meta.env.VITE_API_URL || 'https://talerang-work.onrender.com';
             console.log('Attempting login to:', API_URL);
+
             const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
+            clearTimeout(slowConnectionTimer);
+
             const data = await response.json();
 
             if (response.ok) {
                 console.log('Login successful, data:', data);
+                // alert("Login Successful! Navigating...");
                 login(data);
-                console.log('Navigating to /assessment');
-                navigate('/assessment'); // Start Assessment
+                navigate('/assessment');
             } else {
                 console.error('Login failed with status:', response.status, data);
                 setErrors({ submit: data.error || 'Login failed' });
+                // alert("Login Failed: " + (data.error || 'Unknown error'));
             }
         } catch (err) {
+            clearTimeout(timeoutId);
+            clearTimeout(slowConnectionTimer);
             console.error('Login Error:', err);
-            setErrors({ submit: `Network error: ${err.message}. Ensure backend is running at ${API_URL}` });
+            // alert("Network/Script Error: " + err.message);
+
+            if (err.name === 'AbortError') {
+                setErrors({ submit: "Request timed out. The server might be waking up. Please try again." });
+            } else {
+                setErrors({ submit: `Network error: ${err.message}. Ensure backend is running.` });
+            }
         } finally {
             setLoading(false);
         }
@@ -114,6 +141,12 @@ const LoginPage = () => {
                             </div>
                             {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                         </div>
+
+                        {errors.info && (
+                            <div className="p-3 bg-blue-50 text-blue-600 rounded-lg text-sm text-center animate-pulse">
+                                {errors.info}
+                            </div>
+                        )}
 
                         {errors.submit && (
                             <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm text-center">

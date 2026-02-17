@@ -12,6 +12,15 @@ import { useAuth } from '../context/AuthContext';
 const TalerangQuizPage = () => {
     const { user, logout } = useAuth(); // Destructure logout
     console.log("TalerangQuizPage mounted. User:", user);
+
+    // Redirect if no user (should be handled by ProtectedRoute but good for safety)
+    useEffect(() => {
+        if (!user) {
+            console.warn("No user found in TalerangQuizPage, redirecting...");
+            // Optionally navigate('/login') here if not handled by wrapper
+        }
+    }, [user]);
+
     // State
     const [view, setView] = useState('dashboard'); // dashboard, module-intro, assessment, results
     const [activeModuleId, setActiveModuleId] = useState(null);
@@ -303,8 +312,10 @@ const TalerangQuizPage = () => {
     );
 
     const renderAssessment = () => {
+        if (!activeModuleData || !activeModuleData.sections) return <div className="p-8 text-center">Loading module data...</div>;
+
         const currentSection = activeModuleData.sections[currentSectionIndex];
-        if (!currentSection) return <div>Error</div>;
+        if (!currentSection) return <div className="p-8 text-center">Error: Section not found</div>;
 
         const isLastSection = currentSectionIndex === activeModuleData.sections.length - 1;
         const answeredCount = currentSection.questions.filter(q => currentAnswers[q.id]).length;
