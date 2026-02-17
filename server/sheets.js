@@ -72,12 +72,18 @@ const syncToSheets = async (users) => {
 
     existingRows.forEach(row => {
         const email = row.get('Email');
-        if (email) emailToRowMap.set(email, row);
+        if (email) {
+            // Normalize email for comparison
+            emailToRowMap.set(email.toLowerCase().trim(), row);
+        }
     });
 
     const newRows = [];
 
     for (const user of users) {
+        if (!user.email) continue;
+        const normalizedEmail = user.email.toLowerCase().trim();
+
         // Calculate Data
         let totalScore = 0;
         let completedModules = 0;
@@ -99,7 +105,7 @@ const syncToSheets = async (users) => {
 
         const userData = {
             Name: user.name,
-            Email: user.email,
+            Email: user.email, // Keep original casing for display
             Phone: user.phone,
             'Login Time': user.loginTime ? new Date(user.loginTime).toLocaleString() : '',
             ...moduleScores,
@@ -107,14 +113,16 @@ const syncToSheets = async (users) => {
             'Completed Modules': completedModules,
         };
 
-        if (emailToRowMap.has(user.email)) {
+        if (emailToRowMap.has(normalizedEmail)) {
             // Update Existing Row
-            const row = emailToRowMap.get(user.email);
+            const row = emailToRowMap.get(normalizedEmail);
             row.assign(userData);
             await row.save(); // Save individual row update
         } else {
             // Prepare for Bulk Insert
             newRows.push(userData);
+            // Add to map to prevent duplicates within the same batch if any
+            emailToRowMap.set(normalizedEmail, true);
         }
     }
 
