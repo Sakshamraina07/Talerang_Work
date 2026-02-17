@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://talerang-work.onrender.com';
 
     useEffect(() => {
         fetchUsers();
