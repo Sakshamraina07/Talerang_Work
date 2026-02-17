@@ -23,6 +23,7 @@ const TalerangQuizPage = () => {
 
     // State
     const [view, setView] = useState('dashboard'); // dashboard, module-intro, assessment, results
+    const [loadingProgress, setLoadingProgress] = useState(true); // New loading state
     const [activeModuleId, setActiveModuleId] = useState(null);
     const [activeModuleData, setActiveModuleData] = useState(null);
 
@@ -44,6 +45,7 @@ const TalerangQuizPage = () => {
     useEffect(() => {
         if (user) {
             console.log("Fetching progress for user:", user.id);
+            setLoadingProgress(true); // Ensure loading is true on start
             fetch(`${API_URL}/api/user/${user.id}/progress`)
                 .then(res => {
                     console.log("Progress API Response:", res.status);
@@ -76,9 +78,11 @@ const TalerangQuizPage = () => {
                     setModuleStatus(initialStatus);
                     setModuleScores(initialScores);
                 })
-                .catch(err => console.error("Error fetching progress", err));
+                .catch(err => console.error("Error fetching progress", err))
+                .finally(() => setLoadingProgress(false)); // Stop loading
         } else {
             console.warn("TalerangQuizPage: No user found in context");
+            setLoadingProgress(false);
         }
     }, [user]);
 
@@ -393,12 +397,22 @@ const TalerangQuizPage = () => {
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-gray-900 selection:bg-primary/20 selection:text-primary">
             {renderHeader()}
-            <main>
-                {view === 'dashboard' && renderDashboard()}
-                {view === 'module-intro' && renderModuleIntro()}
-                {view === 'assessment' && renderAssessment()}
-                {view === 'results' && renderResults()}
-            </main>
+
+            {loadingProgress ? (
+                <div className="flex h-[80vh] items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-gray-500 font-medium animate-pulse">Loading your progress...</p>
+                    </div>
+                </div>
+            ) : (
+                <main>
+                    {view === 'dashboard' && renderDashboard()}
+                    {view === 'module-intro' && renderModuleIntro()}
+                    {view === 'assessment' && renderAssessment()}
+                    {view === 'results' && renderResults()}
+                </main>
+            )}
         </div>
     );
 };
