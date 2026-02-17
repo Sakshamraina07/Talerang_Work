@@ -26,6 +26,7 @@ const LoginPage = () => {
         setLoading(true);
         try {
             const API_URL = import.meta.env.VITE_API_URL || 'https://talerang-work.onrender.com';
+            console.log('Attempting login to:', API_URL);
             const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -40,7 +41,8 @@ const LoginPage = () => {
                 setErrors({ submit: data.error || 'Login failed' });
             }
         } catch (err) {
-            setErrors({ submit: 'Network error. Ensure server is running.' });
+            console.error('Login Error:', err);
+            setErrors({ submit: `Network error: ${err.message}. Ensure backend is running at ${API_URL}` });
         } finally {
             setLoading(false);
         }
