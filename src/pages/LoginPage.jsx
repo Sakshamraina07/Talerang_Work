@@ -15,13 +15,18 @@ const LoginPage = () => {
         if (!formData.name) newErrors.name = 'Full Name is required';
         if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Valid Email is required';
         if (!formData.phone || !/^\d{10}$/.test(formData.phone)) newErrors.phone = 'Valid 10-digit Phone is required';
+        console.log('Validation result:', Object.keys(newErrors).length === 0, newErrors);
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validate()) return;
+        console.log('Form submitted', formData);
+        if (!validate()) {
+            console.log('Validation failed');
+            return;
+        }
 
         setLoading(true);
         try {
@@ -35,9 +40,12 @@ const LoginPage = () => {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Login successful, data:', data);
                 login(data);
+                console.log('Navigating to /assessment');
                 navigate('/assessment'); // Start Assessment
             } else {
+                console.error('Login failed with status:', response.status, data);
                 setErrors({ submit: data.error || 'Login failed' });
             }
         } catch (err) {
