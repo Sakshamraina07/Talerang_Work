@@ -21,6 +21,12 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const ProtectedAdminRoute = ({ children }) => {
+  const isAdminAuthenticated = localStorage.getItem('isAdminAuthenticated') === 'true';
+  if (!isAdminAuthenticated) return <Navigate to="/admin-login" replace />;
+  return children;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -34,7 +40,14 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboard />
+              </ProtectedAdminRoute>
+            }
+          />
           <Route
             path="/assessment"
             element={

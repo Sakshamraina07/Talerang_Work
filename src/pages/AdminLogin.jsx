@@ -7,13 +7,22 @@ import { Lock, Mail, ArrowRight } from 'lucide-react';
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // Placeholder for authentication logic
-        // For now, just redirect to dashboard
-        navigate('/admin-dashboard');
+        setError('');
+
+        const allowedEmails = ['aditya@talerang.com', 'saksham.talerang@gmail.com'];
+        const adminPassword = 'Admin@talerang4students';
+
+        if (allowedEmails.includes(email) && password === adminPassword) {
+            localStorage.setItem('isAdminAuthenticated', 'true');
+            navigate('/admin-dashboard');
+        } else {
+            setError('Invalid email or password. Please try again.');
+        }
     };
 
     return (
@@ -31,6 +40,11 @@ const AdminLogin = () => {
                         </div>
                         <h1 className="text-3xl font-heading font-bold text-dark mb-2">Admin Panel</h1>
                         <p className="text-slate-500">Sign in to manage the platform</p>
+                        {error && (
+                            <div className="mt-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+                                {error}
+                            </div>
+                        )}
                     </div>
 
                     <form onSubmit={handleLogin} className="space-y-6">

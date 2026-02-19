@@ -8,8 +8,14 @@ const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
-    const { logout } = useAuth();
+    const { logout: userLogout } = useAuth();
     const navigate = useNavigate();
+
+    const handleAdminLogout = () => {
+        localStorage.removeItem('isAdminAuthenticated');
+        userLogout(); // optional, if we want to clear user session too
+        navigate('/admin-login');
+    };
 
     const API_URL = import.meta.env.VITE_API_URL || 'https://talerang-work.onrender.com';
 
@@ -67,7 +73,7 @@ const AdminDashboard = () => {
                         <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1>
                     </div>
                     <div>
-                        <button onClick={logout} className="text-sm font-medium text-gray-500 hover:text-red-600 flex items-center gap-2">
+                        <button onClick={handleAdminLogout} className="text-sm font-medium text-gray-500 hover:text-red-600 flex items-center gap-2">
                             <LogOut className="w-4 h-4" /> Logout
                         </button>
                     </div>
