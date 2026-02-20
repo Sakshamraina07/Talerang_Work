@@ -8,6 +8,9 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboardKotak from './pages/AdminDashboardKotak';
+import AdminDashboardSndt from './pages/AdminDashboardSndt';
+import AdminDashboardAkdn from './pages/AdminDashboardAkdn';
 import TalerangQuizPage from './pages/TalerangQuizPage';
 import ScrollToTop from './components/layout/ScrollToTop';
 
@@ -45,6 +48,30 @@ function App() {
             element={
               <ProtectedAdminRoute>
                 <AdminDashboard />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard-kotak"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardKotak />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard-sndt"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardSndt />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard-akdn"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardAkdn />
               </ProtectedAdminRoute>
             }
           />

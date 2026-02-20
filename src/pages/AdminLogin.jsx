@@ -8,18 +8,47 @@ const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [clientCode, setClientCode] = useState('NA');
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
         setError('');
 
-        const allowedEmails = ['aditya@talerang.com', 'saksham.talerang@gmail.com'];
+        const allowedEmails = [
+            'aditya@talerang.com',
+            'saksham.talerang@gmail.com',
+            'kotak@gmail.com',
+            'akdn@gmail.com',
+            'sndt@gmail.com'
+        ];
         const adminPassword = 'Admin@talerang4students';
 
         if (allowedEmails.includes(email) && password === adminPassword) {
+            // Restrict specific clients from accessing the main 'NA' portal or other portals
+            if (email === 'kotak@gmail.com' && clientCode !== 'KOTAK') {
+                setError('You do not have permission to access this portal.');
+                return;
+            }
+            if (email === 'akdn@gmail.com' && clientCode !== 'AKDN') {
+                setError('You do not have permission to access this portal.');
+                return;
+            }
+            if (email === 'sndt@gmail.com' && clientCode !== 'SNDT') {
+                setError('You do not have permission to access this portal.');
+                return;
+            }
+
             localStorage.setItem('isAdminAuthenticated', 'true');
-            navigate('/admin-dashboard');
+            if (clientCode === 'KOTAK') {
+                navigate('/admin-dashboard-kotak');
+            } else if (clientCode === 'SNDT') {
+                navigate('/admin-dashboard-sndt');
+            } else if (clientCode === 'AKDN') {
+                navigate('/admin-dashboard-akdn');
+            } else {
+                navigate('/admin-dashboard');
+            }
         } else {
             setError('Invalid email or password. Please try again.');
         }
@@ -79,6 +108,25 @@ const AdminLogin = () => {
                                     placeholder="••••••••"
                                     required
                                 />
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-slate-700 ml-1">Client Code</label>
+                            <div className="grid grid-cols-4 gap-2">
+                                {['KOTAK', 'SNDT', 'AKDN', 'NA'].map((code) => (
+                                    <button
+                                        type="button"
+                                        key={code}
+                                        onClick={() => setClientCode(code)}
+                                        className={`py-2 px-1 text-sm font-medium rounded-xl border transition-all ${clientCode === code
+                                            ? 'bg-primary text-white border-primary shadow-sm'
+                                            : 'bg-white text-slate-600 border-slate-200 hover:border-primary/50 hover:bg-slate-50'
+                                            }`}
+                                    >
+                                        {code}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
