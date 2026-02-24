@@ -58,18 +58,19 @@ const syncToSheets = async (users) => {
 
     // 6. Sync Logic (Update existing, Append new)
 
-    const headers = ['Name', 'Email', 'Phone', 'Referral', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
+    const headers = ['Name', 'Referral', 'Email', 'Phone', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
     try {
-        await sheet.loadHeaderRow(); // Try loading existing headers
+        await sheet.loadHeaderRow();
         const currentHeaders = sheet.headerValues;
-        console.log("📄 Current Sheet Headers:", currentHeaders);
 
-        if (!currentHeaders.includes('Referral')) {
-            console.log("➕ 'Referral' column missing. Updating headers...");
+        const expectedOrder = ['Name', 'Referral', 'Email', 'Phone', 'Login Time'];
+        const isOrderCorrect = expectedOrder.every((h, i) => currentHeaders[i] === h);
+
+        if (!isOrderCorrect) {
+            console.log("🔄 Re-aligning headers to Name-Referral-Email-Phone-LoginTime...");
             await sheet.setHeaderRow(headers);
         }
     } catch (e) {
-        console.log("📝 Initializing headers for new/empty sheet...");
         await sheet.setHeaderRow(headers);
     }
 
@@ -111,10 +112,10 @@ const syncToSheets = async (users) => {
 
         const userData = {
             Name: user.name,
-            Email: user.email, // Keep original casing for display
+            'Referral': user.clientReferred || 'NA',
+            Email: user.email.toLowerCase().trim(),
             Phone: user.phone,
             'Login Time': user.loginTime ? new Date(user.loginTime).toLocaleString() : '',
-            'Referral': user.clientReferred || 'NA',
             ...moduleScores,
             'Total Score': totalScore,
             'Completed Modules': completedModules,

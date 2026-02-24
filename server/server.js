@@ -161,10 +161,10 @@ app.get('/api/admin/export', async (req, res) => {
         const data = users.map(user => {
             const row = {
                 Name: user.name,
+                'Referral': user.clientReferred || 'NA',
                 Email: user.email,
                 Phone: user.phone,
-                LoginTime: user.loginTime,
-                'Referral': user.clientReferred || 'NA'
+                'Login Time': user.loginTime
             };
 
             let totalScore = 0;
