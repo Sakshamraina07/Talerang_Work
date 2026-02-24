@@ -41,6 +41,7 @@ const triggerAutoSync = async () => {
             order: [['loginTime', 'DESC']]
         });
 
+        console.log(`📊 Syncing ${users.length} users to Google Sheets...`);
         await syncToSheets(users);
         console.log("✅ Auto-sync completed.");
     } catch (err) {
@@ -162,8 +163,8 @@ app.get('/api/admin/export', async (req, res) => {
                 Name: user.name,
                 Email: user.email,
                 Phone: user.phone,
-                'Referral': user.clientReferred || 'NA',
-                LoginTime: user.loginTime
+                LoginTime: user.loginTime,
+                'Referral': user.clientReferred || 'NA'
             };
 
             let totalScore = 0;

@@ -58,17 +58,18 @@ const syncToSheets = async (users) => {
 
     // 6. Sync Logic (Update existing, Append new)
 
-    // Ensure headers exist
     const headers = ['Name', 'Email', 'Phone', 'Referral', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
     try {
         await sheet.loadHeaderRow(); // Try loading existing headers
-        // Check if our new header exists, if not, update the whole header row
         const currentHeaders = sheet.headerValues;
+        console.log("📄 Current Sheet Headers:", currentHeaders);
+
         if (!currentHeaders.includes('Referral')) {
+            console.log("➕ 'Referral' column missing. Updating headers...");
             await sheet.setHeaderRow(headers);
         }
     } catch (e) {
-        // If sheet is empty or has no headers, set them
+        console.log("📝 Initializing headers for new/empty sheet...");
         await sheet.setHeaderRow(headers);
     }
 
@@ -112,8 +113,8 @@ const syncToSheets = async (users) => {
             Name: user.name,
             Email: user.email, // Keep original casing for display
             Phone: user.phone,
-            'Referral': user.clientReferred || 'NA',
             'Login Time': user.loginTime ? new Date(user.loginTime).toLocaleString() : '',
+            'Referral': user.clientReferred || 'NA',
             ...moduleScores,
             'Total Score': totalScore,
             'Completed Modules': completedModules,
