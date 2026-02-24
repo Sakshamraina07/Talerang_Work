@@ -119,6 +119,7 @@ const AdminDashboard = () => {
                                 <tr>
                                     <th className="p-4 sticky left-0 bg-gray-50 z-10">Name</th>
                                     <th className="p-4">Contact</th>
+                                    <th className="p-4">Referral</th>
                                     <th className="p-4">Login Time</th>
                                     {/* Dynamic Module Headers */}
                                     {quizModules.map(module => (
@@ -142,6 +143,9 @@ const AdminDashboard = () => {
                                             <td className="p-4">
                                                 <div className="text-sm text-gray-600">{user.email}</div>
                                                 <div className="text-xs text-gray-400">{user.phone}</div>
+                                            </td>
+                                            <td className="p-4 text-sm font-medium text-primary bg-red-50/50 rounded-lg">
+                                                {user.clientReferred || 'NA'}
                                             </td>
                                             <td className="p-4 text-sm text-gray-500">
                                                 {user.loginTime ? new Date(user.loginTime).toLocaleString() : '-'}

@@ -53,14 +53,17 @@ const triggerAutoSync = async () => {
 /* -------- 1. LOGIN / REGISTER -------- */
 app.post('/api/auth/login', async (req, res) => {
     try {
-        const { name, email, phone } = req.body;
+        const { name, email, phone, clientReferred } = req.body;
 
         const [user, created] = await User.findOrCreate({
             where: { email },
-            defaults: { name, phone, loginTime: new Date() }
+            defaults: { name, phone, clientReferred, loginTime: new Date() }
         });
 
         if (!created) {
+            user.name = name;
+            user.phone = phone;
+            user.clientReferred = clientReferred;
             user.loginTime = new Date();
             await user.save();
         }
@@ -159,6 +162,7 @@ app.get('/api/admin/export', async (req, res) => {
                 Name: user.name,
                 Email: user.email,
                 Phone: user.phone,
+                'Referral': user.clientReferred || 'NA',
                 LoginTime: user.loginTime
             };
 

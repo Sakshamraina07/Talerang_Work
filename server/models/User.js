@@ -26,6 +26,11 @@ const User = sequelize.define('User', {
             is: /^[0-9]{10}$/ // Simple 10 digit validation
         }
     },
+    clientReferred: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'NA'
+    },
     loginTime: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW

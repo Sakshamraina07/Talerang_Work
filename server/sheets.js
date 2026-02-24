@@ -59,9 +59,14 @@ const syncToSheets = async (users) => {
     // 6. Sync Logic (Update existing, Append new)
 
     // Ensure headers exist
-    const headers = ['Name', 'Email', 'Phone', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
+    const headers = ['Name', 'Email', 'Phone', 'Referral', 'Login Time', ...modules.map(m => m.title), 'Total Score', 'Completed Modules'];
     try {
         await sheet.loadHeaderRow(); // Try loading existing headers
+        // Check if our new header exists, if not, update the whole header row
+        const currentHeaders = sheet.headerValues;
+        if (!currentHeaders.includes('Referral')) {
+            await sheet.setHeaderRow(headers);
+        }
     } catch (e) {
         // If sheet is empty or has no headers, set them
         await sheet.setHeaderRow(headers);
@@ -107,6 +112,7 @@ const syncToSheets = async (users) => {
             Name: user.name,
             Email: user.email, // Keep original casing for display
             Phone: user.phone,
+            'Referral': user.clientReferred || 'NA',
             'Login Time': user.loginTime ? new Date(user.loginTime).toLocaleString() : '',
             ...moduleScores,
             'Total Score': totalScore,

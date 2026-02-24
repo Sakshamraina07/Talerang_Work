@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, ArrowRight, Loader } from 'lucide-react';
 
 const LoginPage = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', clientReferred: '' });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
@@ -15,6 +15,7 @@ const LoginPage = () => {
         if (!formData.name) newErrors.name = 'Full Name is required';
         if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Valid Email is required';
         if (!formData.phone || !/^\d{10}$/.test(formData.phone)) newErrors.phone = 'Valid 10-digit Phone is required';
+        if (!formData.clientReferred) newErrors.clientReferred = 'Please select an option';
         console.log('Validation result:', Object.keys(newErrors).length === 0, newErrors);
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -140,6 +141,27 @@ const LoginPage = () => {
                                 />
                             </div>
                             {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                        </div>
+
+                        {/* Client Referral Section */}
+                        <div className="space-y-3">
+                            <label className="block text-sm font-medium text-gray-700">Are you client referred? <span className="text-red-500">*</span></label>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                {['KOTAK', 'AKDN', 'SNDT', 'NA'].map((code) => (
+                                    <button
+                                        type="button"
+                                        key={code}
+                                        onClick={() => setFormData({ ...formData, clientReferred: code })}
+                                        className={`py-2 px-1 text-sm font-bold rounded-xl border transition-all duration-200 transform active:scale-95 ${formData.clientReferred === code
+                                            ? 'bg-primary text-white border-primary shadow-md translate-y-[-1px]'
+                                            : 'bg-white text-gray-600 border-gray-200 hover:border-primary/50 hover:bg-red-50'
+                                            }`}
+                                    >
+                                        {code}
+                                    </button>
+                                ))}
+                            </div>
+                            {errors.clientReferred && <p className="text-red-500 text-xs mt-1">{errors.clientReferred}</p>}
                         </div>
 
                         {errors.info && (
