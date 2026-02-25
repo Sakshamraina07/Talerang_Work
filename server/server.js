@@ -138,7 +138,36 @@ app.post('/api/quiz/progress', async (req, res) => {
 /* -------- 4. GET ALL USERS -------- */
 app.get('/api/admin/users', async (req, res) => {
     try {
+        const { referral, adminEmail } = req.query;
+        let whereClause = {};
+
+        if (!adminEmail) {
+            return res.status(403).json({ error: "Unauthorized access" });
+        }
+
+        const email = adminEmail.toLowerCase().trim();
+        const superAdmins = ['aditya@talerang.com', 'saksham.talerang@gmail.com'];
+        const clientAdmins = {
+            'kotak@gmail.com': 'KOTAK',
+            'akdn@gmail.com': 'AKDN',
+            'sndt@gmail.com': 'SNDT'
+        };
+
+        if (superAdmins.includes(email)) {
+            // Super admins can see all, or filter by a specific referral if requested
+            if (referral && referral !== 'NA') {
+                whereClause = { clientReferred: referral };
+            }
+        } else if (clientAdmins[email]) {
+            // Client admins are STRICTLY locked to their own referral tag
+            whereClause = { clientReferred: clientAdmins[email] };
+        } else {
+            // Unknown email
+            return res.status(403).json({ error: "Unauthorized admin email" });
+        }
+
         const users = await User.findAll({
+            where: whereClause,
             include: [ModuleProgress],
             order: [['loginTime', 'DESC']]
         });

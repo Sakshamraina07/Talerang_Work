@@ -15,6 +15,7 @@ const AdminLogin = () => {
         e.preventDefault();
         setError('');
 
+        const normalizedEmail = email.toLowerCase().trim();
         const allowedEmails = [
             'aditya@talerang.com',
             'saksham.talerang@gmail.com',
@@ -24,22 +25,23 @@ const AdminLogin = () => {
         ];
         const adminPassword = 'Admin@talerang4students';
 
-        if (allowedEmails.includes(email) && password === adminPassword) {
+        if (allowedEmails.includes(normalizedEmail) && password === adminPassword) {
             // Restrict specific clients from accessing the main 'NA' portal or other portals
-            if (email === 'kotak@gmail.com' && clientCode !== 'KOTAK') {
+            if (normalizedEmail === 'kotak@gmail.com' && clientCode !== 'KOTAK') {
                 setError('You do not have permission to access this portal.');
                 return;
             }
-            if (email === 'akdn@gmail.com' && clientCode !== 'AKDN') {
+            if (normalizedEmail === 'akdn@gmail.com' && clientCode !== 'AKDN') {
                 setError('You do not have permission to access this portal.');
                 return;
             }
-            if (email === 'sndt@gmail.com' && clientCode !== 'SNDT') {
+            if (normalizedEmail === 'sndt@gmail.com' && clientCode !== 'SNDT') {
                 setError('You do not have permission to access this portal.');
                 return;
             }
 
             localStorage.setItem('isAdminAuthenticated', 'true');
+            localStorage.setItem('adminEmail', normalizedEmail);
             if (clientCode === 'KOTAK') {
                 navigate('/admin-dashboard-kotak');
             } else if (clientCode === 'SNDT') {

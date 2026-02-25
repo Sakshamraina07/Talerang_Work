@@ -4,31 +4,71 @@ import { LayoutDashboard, LogOut, Search, ExternalLink, Loader } from 'lucide-re
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ referralFilter = 'NA' }) => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
     const { logout: userLogout } = useAuth();
     const navigate = useNavigate();
 
+    const rawEmail = localStorage.getItem('adminEmail');
+    const adminEmail = rawEmail ? rawEmail.toLowerCase().trim() : null;
+    const isSuperAdmin = ['aditya@talerang.com', 'saksham.talerang@gmail.com'].includes(adminEmail);
+
+    // Determine the actual filter based on permissions
+    let effectiveFilter = referralFilter;
+    if (!isSuperAdmin) {
+        if (adminEmail === 'kotak@gmail.com') effectiveFilter = 'KOTAK';
+        else if (adminEmail === 'akdn@gmail.com') effectiveFilter = 'AKDN';
+        else if (adminEmail === 'sndt@gmail.com') effectiveFilter = 'SNDT';
+        else {
+            // Unknown admin or missing email - security fallback
+            effectiveFilter = 'NONE';
+        }
+    }
+
     const handleAdminLogout = () => {
         localStorage.removeItem('isAdminAuthenticated');
-        userLogout(); // optional, if we want to clear user session too
+        localStorage.removeItem('adminEmail');
+        userLogout();
         navigate('/admin-login');
     };
 
     const API_URL = import.meta.env.VITE_API_URL || 'https://talerang-work.onrender.com';
 
     useEffect(() => {
+        // Strict access control
+        if (!adminEmail) {
+            handleAdminLogout();
+            return;
+        }
+
+        if (!isSuperAdmin) {
+            // Redirect if trying to access the root dashboard or a different organization's dashboard
+            if (referralFilter === 'NA' || referralFilter !== effectiveFilter) {
+                if (adminEmail === 'kotak@gmail.com') navigate('/admin-dashboard-kotak');
+                else if (adminEmail === 'akdn@gmail.com') navigate('/admin-dashboard-akdn');
+                else if (adminEmail === 'sndt@gmail.com') navigate('/admin-dashboard-sndt');
+                else handleAdminLogout();
+                return;
+            }
+        }
         fetchUsers();
-    }, []);
+    }, [effectiveFilter, referralFilter, adminEmail]);
 
     const fetchUsers = async () => {
+        // Final safety check before API call
+        const finalFilter = isSuperAdmin ? referralFilter : effectiveFilter;
+
         try {
-            const res = await fetch(`${API_URL}/api/admin/users`);
+            const emailParam = adminEmail ? `&adminEmail=${encodeURIComponent(adminEmail)}` : '';
+            const res = await fetch(`${API_URL}/api/admin/users?referral=${finalFilter}${emailParam}`);
             if (res.ok) {
                 const data = await res.json();
                 setUsers(data);
+            } else if (res.status === 403) {
+                // If backend says unauthorized, kick to login
+                handleAdminLogout();
             }
         } catch (error) {
             console.error("Failed to fetch users", error);
