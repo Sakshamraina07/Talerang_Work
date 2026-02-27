@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { quizModules } from '../data/quizData';
 import ModuleCard from '../components/quiz/ModuleCard';
 import QuestionCard from '../components/quiz/QuestionCard';
 import JourneyProgress from '../components/quiz/JourneyProgress';
 import CompetencyReport from '../components/quiz/CompetencyReport';
-import { Share2, ArrowLeft, ArrowRight, Save, Award, AlertCircle, CheckCircle, Home } from 'lucide-react';
+import { Share2, ArrowLeft, ArrowRight, Save, Award, AlertCircle, CheckCircle, Home, LogOut, ChevronDown, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
@@ -26,6 +26,19 @@ const TalerangQuizPage = () => {
     const [loadingProgress, setLoadingProgress] = useState(true); // New loading state
     const [activeModuleId, setActiveModuleId] = useState(null);
     const [activeModuleData, setActiveModuleData] = useState(null);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const profileRef = useRef(null);
+
+    // Close profile dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setProfileOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Progress State
     const [moduleStatus, setModuleStatus] = useState({});
@@ -210,6 +223,49 @@ const TalerangQuizPage = () => {
                     <div className="hidden sm:flex items-center px-3 py-1 bg-red-50 text-primary rounded-full text-xs font-bold uppercase tracking-wider">
                         Assessment Portal
                     </div>
+
+                    {/* Profile Dropdown */}
+                    {user && (
+                        <div className="relative" ref={profileRef}>
+                            <button
+                                onClick={() => setProfileOpen(prev => !prev)}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-red-50 hover:border-primary/40 transition-all group shadow-sm"
+                            >
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-red-500 to-purple-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                    {user.name ? user.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
+                                </div>
+                                <span className="hidden sm:block text-sm font-semibold text-gray-700 group-hover:text-primary transition-colors max-w-[120px] truncate">
+                                    {user.name || 'My Account'}
+                                </span>
+                                <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {profileOpen && (
+                                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 animate-fade-in-up">
+                                    <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-red-50 to-purple-50">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-purple-700 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                                {user.name ? user.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-sm font-bold text-gray-800 truncate">{user.name || 'Student'}</p>
+                                                <p className="text-xs text-gray-400 truncate">{user.email || ''}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="p-2">
+                                        <button
+                                            onClick={() => { setProfileOpen(false); logout(); }}
+                                            className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors group"
+                                        >
+                                            <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                                            Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </header>
