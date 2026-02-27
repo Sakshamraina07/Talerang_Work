@@ -12,6 +12,7 @@ import AdminDashboardKotak from './pages/AdminDashboardKotak';
 import AdminDashboardSndt from './pages/AdminDashboardSndt';
 import AdminDashboardAkdn from './pages/AdminDashboardAkdn';
 import TalerangQuizPage from './pages/TalerangQuizPage';
+import WrapTest from './pages/WrapTest';
 import ScrollToTop from './components/layout/ScrollToTop';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -42,6 +43,7 @@ function App() {
           <Route path="/alumni" element={<Alumni />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/wraptest" element={<WrapTest />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route
             path="/admin-dashboard"

@@ -46,6 +46,11 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link to="/wraptest">
+                        <Button variant="outline" className="px-5 py-2 text-sm font-medium border-red-400 text-red-600 hover:bg-red-50">
+                            WrapTest
+                        </Button>
+                    </Link>
                     <Link to="/assessment">
                         <Button variant="outline" className="px-5 py-2 text-sm font-medium border-secondary text-secondary hover:bg-secondary/10">
                             Assessment
@@ -85,6 +90,11 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link to="/wraptest" onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="outline" className="w-full justify-center border-red-400 text-red-600">
+                            WrapTest
+                        </Button>
+                    </Link>
                     <Link to="/assessment">
                         <Button variant="outline" className="w-full justify-center border-secondary text-secondary">
                             Assessment
