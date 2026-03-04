@@ -549,12 +549,156 @@ const WrapTest = () => {
                         </div>
                     </div>
 
+                    {/* ── Course Outline Banner ── */}
+                    <div
+                        style={{
+                            borderRadius: '1rem',
+                            overflow: 'hidden',
+                            marginBottom: '3rem',
+                            boxShadow: '0 8px 32px rgba(15,23,42,0.10), 0 2px 8px rgba(220,38,38,0.10)',
+                            border: '1px solid rgba(15,23,42,0.08)',
+                        }}
+                    >
+                        {/* Header */}
+                        <div
+                            style={{
+                                background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 60%, #7F1D1D 100%)',
+                                padding: '1rem 1.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            {/* Diagonal light streak */}
+                            <div style={{
+                                position: 'absolute', top: 0, left: '-10%',
+                                width: '40%', height: '100%',
+                                background: 'linear-gradient(105deg, transparent 0%, rgba(220,38,38,0.12) 50%, transparent 100%)',
+                                pointerEvents: 'none',
+                            }} />
+                            <div
+                                style={{
+                                    width: '2.25rem', height: '2.25rem', borderRadius: '0.5rem',
+                                    background: 'linear-gradient(135deg, #DC2626, #991B1B)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    boxShadow: '0 2px 10px rgba(220,38,38,0.5)',
+                                    flexShrink: 0,
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '1rem', height: '1rem', color: '#fff' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+                                    <line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '1px' }}>
+                                    Resources
+                                </p>
+                                <h3 style={{ color: '#F8FAFC', fontWeight: 800, fontSize: '1rem', margin: 0 }}>
+                                    Course Outline
+                                </h3>
+                            </div>
+                        </div>
+
+                        {/* Body */}
+                        <div
+                            style={{
+                                background: '#fff',
+                                padding: '1.5rem 1.75rem',
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '0.875rem',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {/* Download Course Outline */}
+                            <a
+                                href="https://drive.google.com/file/d/1CqCVrE1E0HfQoTNak_HEpIoEjeyTbMoA/view"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.7rem 1.5rem',
+                                    borderRadius: '0.65rem',
+                                    fontSize: '0.82rem',
+                                    fontWeight: 700,
+                                    background: 'linear-gradient(135deg, #DC2626, #991B1B)',
+                                    color: '#fff',
+                                    textDecoration: 'none',
+                                    boxShadow: '0 4px 14px rgba(220,38,38,0.35)',
+                                    transition: 'all 0.22s ease',
+                                    letterSpacing: '0.01em',
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(220,38,38,0.55)';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(220,38,38,0.35)';
+                                    e.currentTarget.style.transform = 'none';
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '0.95rem', height: '0.95rem' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                Download Course Outline
+                            </a>
+
+                            {/* Divider dot */}
+                            <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'rgba(15,23,42,0.15)', display: 'inline-block', flexShrink: 0 }} />
+
+                            {/* Watch Demo Video */}
+                            <a
+                                href="https://drive.google.com/file/d/1RCdhBf9gigAhePxzoAgRc6yAiDPB4mDy/view"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.7rem 1.5rem',
+                                    borderRadius: '0.65rem',
+                                    fontSize: '0.82rem',
+                                    fontWeight: 700,
+                                    background: '#0F172A',
+                                    color: '#F8FAFC',
+                                    textDecoration: 'none',
+                                    boxShadow: '0 4px 14px rgba(15,23,42,0.2)',
+                                    transition: 'all 0.22s ease',
+                                    letterSpacing: '0.01em',
+                                    border: '1.5px solid rgba(220,38,38,0.25)',
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(15,23,42,0.35)';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.borderColor = 'rgba(220,38,38,0.6)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(15,23,42,0.2)';
+                                    e.currentTarget.style.transform = 'none';
+                                    e.currentTarget.style.borderColor = 'rgba(220,38,38,0.25)';
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '0.95rem', height: '0.95rem', color: '#DC2626' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" />
+                                </svg>
+                                Watch Talerang Portal Demo
+                            </a>
+                        </div>
+                    </div>
+
                     {/* Step cards */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         {steps.map((step, index) => (
                             <StepCard key={step.id} step={step} index={index} />
                         ))}
                     </div>
+
 
                     {/* Bottom CTA */}
                     <div style={{ marginTop: '4rem', textAlign: 'center' }}>
