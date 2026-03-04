@@ -412,15 +412,15 @@ const WrapTest = () => {
                     </div>
 
                     <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 900, color: '#F8FAFC', lineHeight: 1.1, marginBottom: '1.25rem' }}>
-                        The Talerang{' '}
+                        Express{' '}
                         <span style={{
                             backgroundImage: 'linear-gradient(90deg, #DC2626, #F87171)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                         }}>
-                            WrapTest
+                            Portal
                         </span>
-                        <br />Journey
+                        {' '}Journey
                     </h1>
 
                     <p style={{ fontSize: '1rem', color: '#64748B', maxWidth: '36rem', margin: '0 auto 2.5rem', lineHeight: 1.75 }}>
