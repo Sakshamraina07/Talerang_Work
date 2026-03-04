@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import Layout from '../components/layout/Layout';
 import {
-    Lock, CheckCircle, ChevronDown, ChevronUp,
+    Lock, ChevronDown, ChevronUp,
     BarChart2, Compass, BookOpen, Briefcase,
     FileText, Users, Award, Rocket, ExternalLink, ArrowRight, Sparkles
 } from 'lucide-react';
+
+/* ─── Brand palette ─────────────────────────────────────────────────────────
+   Primary red  : #DC2626  (red-600)
+   Deep red     : #991B1B  (red-800)
+   Dark blue    : #0F172A  (slate-900)
+   Mid dark blue: #1E293B  (slate-800)
+   Card surface : #162032  (~slate-850)
+   Muted text   : #94A3B8  (slate-400)
+────────────────────────────────────────────────────────────────────────── */
 
 const steps = [
     {
@@ -12,12 +21,7 @@ const steps = [
         title: 'Competency Assessment',
         subtitle: 'Know where you stand',
         icon: BarChart2,
-        color: 'from-red-500 to-rose-600',
-        borderColor: 'border-red-400',
-        glowColor: 'shadow-red-500/20',
-        badgeColor: 'bg-red-100 text-red-700',
         locked: false,
-        completed: false,
         description:
             'Begin your journey by understanding your current competency levels across key career dimensions. This personalised assessment maps your strengths and identifies development areas.',
         actions: [
@@ -29,12 +33,7 @@ const steps = [
         title: 'Skill & Career Indicator',
         subtitle: 'Discover your direction',
         icon: Compass,
-        color: 'from-orange-500 to-amber-500',
-        borderColor: 'border-orange-400',
-        glowColor: 'shadow-orange-500/20',
-        badgeColor: 'bg-orange-100 text-orange-700',
         locked: false,
-        completed: false,
         description:
             'Take the Talerang Career Aptitude Test (T-CAT) to unlock curated insights about your ideal career path. Choose the level that suits your current stage.',
         actions: [
@@ -49,12 +48,7 @@ const steps = [
         title: 'Training',
         subtitle: 'Bridge your skill gap',
         icon: BookOpen,
-        color: 'from-purple-500 to-violet-600',
-        borderColor: 'border-purple-400',
-        glowColor: 'shadow-purple-500/20',
-        badgeColor: 'bg-purple-100 text-purple-700',
         locked: false,
-        completed: false,
         description:
             'Receive interactive training to bridge your skill gap. There are several suggested trainings on the portal and additional live webinars you will be notified about via email.',
         actions: [
@@ -66,12 +60,7 @@ const steps = [
         title: 'Micro-Internships',
         subtitle: 'Apply your skills in real projects',
         icon: Briefcase,
-        color: 'from-blue-500 to-cyan-500',
-        borderColor: 'border-blue-400',
-        glowColor: 'shadow-blue-500/20',
-        badgeColor: 'bg-blue-100 text-blue-700',
         locked: false,
-        completed: false,
         description:
             'Get hands-on experience through curated micro-internship projects that mirror real workplace challenges.',
         actions: [
@@ -84,12 +73,7 @@ const steps = [
         title: 'Resume Creator',
         subtitle: 'Build your perfect resume',
         icon: FileText,
-        color: 'from-teal-500 to-emerald-500',
-        borderColor: 'border-teal-400',
-        glowColor: 'shadow-teal-500/20',
-        badgeColor: 'bg-teal-100 text-teal-700',
         locked: true,
-        completed: false,
         description:
             'Make use of the Resume Creator tool to build the perfect resume for yourself. Stand out with an ATS-optimised, professionally designed profile.',
         actions: [
@@ -101,12 +85,7 @@ const steps = [
         title: 'Mentorship Session',
         subtitle: 'Get expert guidance',
         icon: Users,
-        color: 'from-indigo-500 to-blue-600',
-        borderColor: 'border-indigo-400',
-        glowColor: 'shadow-indigo-500/20',
-        badgeColor: 'bg-indigo-100 text-indigo-700',
         locked: true,
-        completed: false,
         description:
             'Get access to an exclusive mentoring session with Team Talerang. We provide feedback on the project you have worked on and help you sign up for a mock interview (20–30 minutes).',
         actions: [
@@ -118,12 +97,7 @@ const steps = [
         title: 'Download Certificate',
         subtitle: 'Celebrate your achievement',
         icon: Award,
-        color: 'from-yellow-500 to-orange-400',
-        borderColor: 'border-yellow-400',
-        glowColor: 'shadow-yellow-500/20',
-        badgeColor: 'bg-yellow-100 text-yellow-700',
         locked: true,
-        completed: false,
         description:
             'Collect your certificate for completing this program. Your Talerang certification is recognised by top recruiters and hiring managers across industries.',
         actions: [
@@ -135,12 +109,7 @@ const steps = [
         title: 'Apply for Jobs',
         subtitle: 'Launch your career',
         icon: Rocket,
-        color: 'from-pink-500 to-red-500',
-        borderColor: 'border-pink-400',
-        glowColor: 'shadow-pink-500/20',
-        badgeColor: 'bg-pink-100 text-pink-700',
         locked: true,
-        completed: false,
         description:
             'You will be required to give us details about your preferred skill track, location, references and complete a few quick formalities before you are connected to an internship or job opportunity.',
         actions: [
@@ -149,210 +118,430 @@ const steps = [
     },
 ];
 
+/* ─── Step Card ────────────────────────────────────────────────────────────── */
 const StepCard = ({ step, index }) => {
     const [expanded, setExpanded] = useState(!step.locked && index < 4);
     const Icon = step.icon;
 
     return (
-        <div
-            className={`relative group transition-all duration-500 ${step.locked ? 'opacity-70' : 'opacity-100'}`}
-        >
+        <div className={`relative group transition-all duration-500 ${step.locked ? 'opacity-50' : 'opacity-100'}`}>
+
             {/* Connector line */}
             {index < steps.length - 1 && (
-                <div className={`absolute left-8 top-full w-0.5 h-6 z-10 ${step.locked ? 'bg-gray-200' : 'bg-gradient-to-b from-gray-300 to-gray-100'}`} />
+                <div
+                    className="absolute left-8 top-full w-0.5 h-6 z-10"
+                    style={{
+                        background: step.locked
+                            ? 'rgba(15,23,42,0.1)'
+                            : 'linear-gradient(to bottom, #DC2626, rgba(220,38,38,0.1))'
+                    }}
+                />
             )}
 
+            {/* Card */}
             <div
-                className={`
-                    relative overflow-hidden rounded-2xl border transition-all duration-300
-                    ${step.locked
-                        ? 'border-gray-200 bg-white/60'
-                        : `bg-white border-gray-100 shadow-lg ${step.glowColor} hover:shadow-xl`
-                    }
-                    ${!step.locked ? 'hover:-translate-y-0.5' : ''}
-                `}
+                style={{
+                    background: step.locked ? '#FAFAFA' : '#ffffff',
+                    border: step.locked
+                        ? '1px solid rgba(15,23,42,0.07)'
+                        : '1px solid rgba(15,23,42,0.12)',
+                    boxShadow: step.locked
+                        ? 'none'
+                        : '0 4px 20px rgba(15,23,42,0.07), 0 1px 4px rgba(220,38,38,0.08)',
+                    borderRadius: '1rem',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                }}
+                className={!step.locked ? 'hover:-translate-y-0.5' : ''}
             >
-                {/* Gradient accent top bar */}
+                {/* Red top accent bar */}
                 {!step.locked && (
-                    <div className={`h-1 w-full bg-gradient-to-r ${step.color}`} />
+                    <div style={{ height: '3px', background: 'linear-gradient(90deg, #DC2626, #991B1B)' }} />
                 )}
 
-                {/* Card Header */}
+                {/* Header button */}
                 <button
                     onClick={() => !step.locked && setExpanded(p => !p)}
                     className={`w-full flex items-center gap-4 px-6 py-5 text-left ${!step.locked ? 'cursor-pointer' : 'cursor-default'}`}
                 >
-                    {/* Step number / icon circle */}
-                    <div className={`
-                        flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300
-                        ${step.locked
-                            ? 'bg-gray-100'
-                            : `bg-gradient-to-br ${step.color} shadow-lg group-hover:scale-110`
-                        }
-                    `}>
+                    {/* Icon circle */}
+                    <div
+                        style={{
+                            width: '3.5rem',
+                            height: '3.5rem',
+                            borderRadius: '0.75rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            background: step.locked
+                                ? 'rgba(15,23,42,0.06)'
+                                : 'linear-gradient(135deg, #DC2626, #7F1D1D)',
+                            boxShadow: step.locked ? 'none' : '0 4px 14px rgba(220,38,38,0.35)',
+                            transition: 'transform 0.3s ease',
+                        }}
+                        className={!step.locked ? 'group-hover:scale-110' : ''}
+                    >
                         {step.locked
-                            ? <Lock className="w-5 h-5 text-gray-400" />
-                            : <Icon className="w-6 h-6 text-white" />
+                            ? <Lock style={{ width: '1.1rem', height: '1.1rem', color: 'rgba(15,23,42,0.25)' }} />
+                            : <Icon style={{ width: '1.3rem', height: '1.3rem', color: '#fff' }} />
                         }
                     </div>
 
                     {/* Title block */}
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${step.locked ? 'bg-gray-100 text-gray-400' : step.badgeColor}`}>
+                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                            <span
+                                style={{
+                                    fontSize: '0.65rem',
+                                    fontWeight: 800,
+                                    letterSpacing: '0.08em',
+                                    padding: '2px 10px',
+                                    borderRadius: '999px',
+                                    background: step.locked
+                                        ? 'rgba(15,23,42,0.05)'
+                                        : 'rgba(220,38,38,0.08)',
+                                    color: step.locked ? 'rgba(15,23,42,0.25)' : '#DC2626',
+                                    border: step.locked ? '1px solid rgba(15,23,42,0.08)' : '1px solid rgba(220,38,38,0.25)',
+                                }}
+                            >
                                 STEP {step.id}
                             </span>
                             {step.locked && (
-                                <span className="flex items-center gap-1 text-xs text-gray-400 font-medium">
-                                    <Lock className="w-3 h-3" /> Locked
+                                <span style={{ fontSize: '0.7rem', color: 'rgba(15,23,42,0.3)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                    <Lock style={{ width: '0.65rem', height: '0.65rem' }} /> Locked
                                 </span>
                             )}
                         </div>
-                        <h3 className={`text-lg font-bold mt-1 ${step.locked ? 'text-gray-400' : 'text-gray-800'}`}>
+                        <h3
+                            style={{
+                                fontWeight: 700,
+                                fontSize: '1.05rem',
+                                color: step.locked ? 'rgba(15,23,42,0.3)' : '#0F172A',
+                                marginBottom: '2px',
+                            }}
+                        >
                             {step.title}
                         </h3>
-                        <p className={`text-sm ${step.locked ? 'text-gray-300' : 'text-gray-500'}`}>
+                        <p style={{ fontSize: '0.8rem', color: step.locked ? 'rgba(15,23,42,0.3)' : '#64748B' }}>
                             {step.subtitle}
                         </p>
                     </div>
 
                     {/* Expand toggle */}
                     {!step.locked && (
-                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${expanded ? 'bg-gray-100' : 'bg-gray-50'}`}>
+                        <div
+                            style={{
+                                flexShrink: 0,
+                                width: '2rem',
+                                height: '2rem',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                background: expanded ? 'rgba(220,38,38,0.08)' : 'rgba(15,23,42,0.04)',
+                                border: '1px solid rgba(220,38,38,0.2)',
+                                transition: 'background 0.2s',
+                            }}
+                        >
                             {expanded
-                                ? <ChevronUp className="w-4 h-4 text-gray-500" />
-                                : <ChevronDown className="w-4 h-4 text-gray-500" />
+                                ? <ChevronUp style={{ width: '1rem', height: '1rem', color: '#DC2626' }} />
+                                : <ChevronDown style={{ width: '1rem', height: '1rem', color: '#64748B' }} />
                             }
                         </div>
                     )}
                 </button>
 
-                {/* Expandable Body */}
-                <div className={`overflow-hidden transition-all duration-500 ${expanded && !step.locked ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <div className="px-6 pb-6 border-t border-gray-50">
-                        <p className="text-gray-600 text-sm leading-relaxed mt-4 mb-5">
+                {/* Expandable body */}
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        maxHeight: expanded && !step.locked ? '24rem' : '0',
+                        opacity: expanded && !step.locked ? 1 : 0,
+                        transition: 'max-height 0.5s ease, opacity 0.4s ease',
+                    }}
+                >
+                    <div
+                        style={{
+                            padding: '0 1.5rem 1.5rem',
+                            borderTop: '1px solid rgba(15,23,42,0.07)',
+                        }}
+                    >
+                        <p style={{ color: '#475569', fontSize: '0.875rem', lineHeight: 1.7, marginTop: '1rem', marginBottom: '1.25rem' }}>
                             {step.description}
                         </p>
 
                         {step.tags && (
-                            <div className="flex flex-wrap gap-2 mb-4">
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
                                 {step.tags.map(tag => (
-                                    <span key={tag} className={`text-xs font-semibold px-3 py-1 rounded-full ${step.badgeColor}`}>
+                                    <span
+                                        key={tag}
+                                        style={{
+                                            fontSize: '0.72rem',
+                                            fontWeight: 700,
+                                            padding: '3px 12px',
+                                            borderRadius: '999px',
+                                            background: 'rgba(220,38,38,0.15)',
+                                            color: '#FCA5A5',
+                                            border: '1px solid rgba(220,38,38,0.3)',
+                                        }}
+                                    >
                                         {tag}
                                     </span>
                                 ))}
                             </div>
                         )}
 
-                        <div className="flex flex-wrap gap-3">
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
                             {step.actions.map((action, i) => (
                                 <a
                                     key={i}
                                     href={action.href}
-                                    className={`
-                                        inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
-                                        ${action.primary
-                                            ? `bg-gradient-to-r ${step.color} text-white shadow-md hover:shadow-lg hover:-translate-y-0.5`
-                                            : 'border border-gray-200 text-gray-600 hover:border-gray-400 hover:bg-gray-50'
+                                    style={action.primary ? {
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.4rem',
+                                        padding: '0.6rem 1.25rem',
+                                        borderRadius: '0.6rem',
+                                        fontSize: '0.82rem',
+                                        fontWeight: 700,
+                                        background: 'linear-gradient(135deg, #DC2626, #991B1B)',
+                                        color: '#fff',
+                                        boxShadow: '0 4px 14px rgba(220,38,38,0.4)',
+                                        textDecoration: 'none',
+                                        transition: 'all 0.2s ease',
+                                        border: 'none',
+                                    } : {
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.4rem',
+                                        padding: '0.6rem 1.25rem',
+                                        borderRadius: '0.6rem',
+                                        fontSize: '0.82rem',
+                                        fontWeight: 600,
+                                        background: 'transparent',
+                                        color: '#475569',
+                                        border: '1px solid rgba(15,23,42,0.15)',
+                                        textDecoration: 'none',
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                    onMouseEnter={e => {
+                                        if (action.primary) {
+                                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(220,38,38,0.55)';
+                                            e.currentTarget.style.transform = 'translateY(-1px)';
+                                        } else {
+                                            e.currentTarget.style.borderColor = 'rgba(220,38,38,0.35)';
+                                            e.currentTarget.style.color = '#DC2626';
                                         }
-                                    `}
+                                    }}
+                                    onMouseLeave={e => {
+                                        if (action.primary) {
+                                            e.currentTarget.style.boxShadow = '0 4px 14px rgba(220,38,38,0.4)';
+                                            e.currentTarget.style.transform = 'none';
+                                        } else {
+                                            e.currentTarget.style.borderColor = 'rgba(15,23,42,0.15)';
+                                            e.currentTarget.style.color = '#475569';
+                                        }
+                                    }}
                                 >
                                     {action.label}
-                                    {action.primary && <ExternalLink className="w-3.5 h-3.5" />}
+                                    {action.primary && <ExternalLink style={{ width: '0.8rem', height: '0.8rem' }} />}
                                 </a>
                             ))}
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
+/* ─── Page ─────────────────────────────────────────────────────────────────── */
 const WrapTest = () => {
     const unlockedCount = steps.filter(s => !s.locked).length;
     const progressPercent = Math.round((unlockedCount / steps.length) * 100);
 
     return (
         <Layout>
-            {/* ── Hero Section ── */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 pt-10 pb-20">
-                {/* Decorative blobs */}
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-800/10 rounded-full blur-3xl pointer-events-none" />
+            {/* ── Hero ── */}
+            <section
+                style={{
+                    position: 'relative',
+                    overflow: 'hidden',
+                    background: 'linear-gradient(135deg, #0F172A 0%, #1a0a0a 50%, #0F172A 100%)',
+                    paddingTop: '4.5rem',
+                    paddingBottom: '6rem',
+                }}
+            >
+                {/* Background orbs */}
+                <div style={{
+                    position: 'absolute', top: '-5rem', left: '50%', transform: 'translateX(-50%)',
+                    width: '700px', height: '700px',
+                    background: 'radial-gradient(circle, rgba(220,38,38,0.18) 0%, transparent 70%)',
+                    pointerEvents: 'none',
+                }} />
+                <div style={{
+                    position: 'absolute', bottom: '-3rem', right: '-4rem',
+                    width: '350px', height: '350px',
+                    background: 'radial-gradient(circle, rgba(153,27,27,0.2) 0%, transparent 70%)',
+                    pointerEvents: 'none',
+                }} />
+                <div style={{
+                    position: 'absolute', top: '2rem', left: '-3rem',
+                    width: '280px', height: '280px',
+                    background: 'radial-gradient(circle, rgba(30,41,59,0.7) 0%, transparent 70%)',
+                    pointerEvents: 'none',
+                }} />
 
-                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                <div style={{ position: 'relative', maxWidth: '52rem', margin: '0 auto', padding: '0 1.5rem', textAlign: 'center' }}>
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white/80 text-sm font-semibold mb-8 animate-fade-in-up">
-                        <Sparkles className="w-4 h-4 text-yellow-400" />
+                    <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                        padding: '0.4rem 1.1rem',
+                        background: 'rgba(220,38,38,0.12)',
+                        border: '1px solid rgba(220,38,38,0.3)',
+                        borderRadius: '999px',
+                        color: '#FCA5A5',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.04em',
+                        marginBottom: '1.75rem',
+                    }}>
+                        <Sparkles style={{ width: '0.85rem', height: '0.85rem', color: '#DC2626' }} />
                         Your Career Roadmap — 8 Steps to Success
                     </div>
 
-                    <h1 className="text-5xl sm:text-6xl font-extrabold text-white leading-tight mb-6 animate-fade-in-up">
+                    <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 900, color: '#F8FAFC', lineHeight: 1.1, marginBottom: '1.25rem' }}>
                         The Talerang{' '}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-rose-300 to-orange-300">
+                        <span style={{
+                            backgroundImage: 'linear-gradient(90deg, #DC2626, #F87171)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                        }}>
                             WrapTest
                         </span>
                         <br />Journey
                     </h1>
-                    <p className="text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up">
+
+                    <p style={{ fontSize: '1rem', color: '#64748B', maxWidth: '36rem', margin: '0 auto 2.5rem', lineHeight: 1.75 }}>
                         A structured, end-to-end career development program — from knowing yourself to landing your dream job. Complete each step to unlock the next.
                     </p>
 
-                    {/* Quick stat pills */}
-                    <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up">
+                    {/* Stat pills */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem' }}>
                         {[
-                            { label: '8 Milestones', color: 'bg-red-500/20 border-red-400/30 text-red-300' },
-                            { label: 'Personalised Path', color: 'bg-purple-500/20 border-purple-400/30 text-purple-300' },
-                            { label: 'Industry Recognised', color: 'bg-amber-500/20 border-amber-400/30 text-amber-300' },
-                        ].map(pill => (
-                            <span key={pill.label} className={`px-5 py-2 rounded-full border backdrop-blur-sm text-sm font-semibold ${pill.color}`}>
-                                {pill.label}
+                            '8 Milestones',
+                            'Personalised Path',
+                            'Industry Recognised',
+                        ].map((label, idx) => (
+                            <span
+                                key={label}
+                                style={{
+                                    padding: '0.45rem 1.1rem',
+                                    borderRadius: '999px',
+                                    fontSize: '0.78rem',
+                                    fontWeight: 700,
+                                    background: idx === 0
+                                        ? 'rgba(220,38,38,0.15)'
+                                        : 'rgba(30,41,59,0.8)',
+                                    border: idx === 0
+                                        ? '1px solid rgba(220,38,38,0.35)'
+                                        : '1px solid rgba(255,255,255,0.08)',
+                                    color: idx === 0 ? '#FCA5A5' : '#94A3B8',
+                                    backdropFilter: 'blur(8px)',
+                                }}
+                            >
+                                {label}
                             </span>
                         ))}
                     </div>
                 </div>
 
                 {/* Wave divider */}
-                <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
-                    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" className="w-full text-slate-50" preserveAspectRatio="none" height="60">
-                        <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="currentColor" />
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, overflow: 'hidden', lineHeight: 0 }}>
+                    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', display: 'block' }} preserveAspectRatio="none" height="60">
+                        <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#ffffff" />
                     </svg>
                 </div>
             </section>
 
             {/* ── Main Content ── */}
-            <section className="bg-slate-50 py-16">
-                <div className="max-w-3xl mx-auto px-4 sm:px-6">
+            <section style={{ background: '#ffffff', padding: '4rem 0 5rem' }}>
+                <div style={{ maxWidth: '44rem', margin: '0 auto', padding: '0 1.5rem' }}>
 
-                    {/* Progress Overview Card */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-12 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-red-50 to-transparent rounded-bl-full" />
-                        <div className="relative flex items-center justify-between gap-4 flex-wrap mb-4">
+                    {/* Progress Card */}
+                    <div
+                        style={{
+                            background: '#ffffff',
+                            borderRadius: '1rem',
+                            border: '1px solid rgba(15,23,42,0.1)',
+                            boxShadow: '0 8px 32px rgba(15,23,42,0.08), 0 2px 8px rgba(220,38,38,0.08)',
+                            padding: '1.5rem',
+                            marginBottom: '3rem',
+                            position: 'relative',
+                            overflow: 'hidden',
+                        }}
+                    >
+                        {/* Corner accent */}
+                        <div style={{
+                            position: 'absolute', top: 0, right: 0,
+                            width: '120px', height: '120px',
+                            background: 'radial-gradient(circle at top right, rgba(220,38,38,0.08), transparent 70%)',
+                        }} />
+
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem', position: 'relative' }}>
                             <div>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Your Progress</p>
-                                <h2 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-purple-700">
+                                <p style={{ fontSize: '0.65rem', fontWeight: 800, color: '#DC2626', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+                                    Your Progress
+                                </p>
+                                <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0F172A' }}>
                                     {unlockedCount} of {steps.length} Steps Unlocked
                                 </h2>
                             </div>
-                            <div className="text-right">
-                                <span className="text-4xl font-black text-primary">{progressPercent}%</span>
-                                <span className="block text-xs text-gray-400 font-medium">Completed</span>
+                            <div style={{ textAlign: 'right' }}>
+                                <span style={{ fontSize: '2.8rem', fontWeight: 900, backgroundImage: 'linear-gradient(135deg, #DC2626, #F87171)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                                    {progressPercent}%
+                                </span>
+                                <span style={{ display: 'block', fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600 }}>Completed</span>
                             </div>
                         </div>
-                        <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+
+                        {/* Progress bar */}
+                        <div style={{ width: '100%', background: 'rgba(15,23,42,0.08)', borderRadius: '999px', height: '6px', overflow: 'hidden', marginBottom: '1rem' }}>
                             <div
-                                className="h-full bg-gradient-to-r from-red-500 to-purple-600 rounded-full transition-all duration-700"
-                                style={{ width: `${progressPercent}%` }}
+                                style={{
+                                    height: '100%',
+                                    width: `${progressPercent}%`,
+                                    background: 'linear-gradient(90deg, #DC2626, #F87171)',
+                                    borderRadius: '999px',
+                                    boxShadow: '0 0 10px rgba(220,38,38,0.6)',
+                                    transition: 'width 0.8s ease',
+                                }}
                             />
                         </div>
-                        <div className="mt-4 flex flex-wrap gap-2">
+
+                        {/* Step dots */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                             {steps.map(s => (
                                 <div
                                     key={s.id}
                                     title={s.title}
-                                    className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-all ${s.locked ? 'bg-gray-100 text-gray-300' : `bg-gradient-to-br ${s.color} text-white shadow-sm`}`}
+                                    style={{
+                                        width: '1.75rem',
+                                        height: '1.75rem',
+                                        borderRadius: '0.4rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '0.7rem',
+                                        fontWeight: 800,
+                                        background: s.locked
+                                            ? 'rgba(15,23,42,0.06)'
+                                            : 'linear-gradient(135deg, #DC2626, #991B1B)',
+                                        color: s.locked ? 'rgba(15,23,42,0.2)' : '#fff',
+                                        boxShadow: s.locked ? 'none' : '0 2px 8px rgba(220,38,38,0.4)',
+                                        border: s.locked ? '1px solid rgba(15,23,42,0.08)' : 'none',
+                                    }}
                                 >
                                     {s.id}
                                 </div>
@@ -360,31 +549,91 @@ const WrapTest = () => {
                         </div>
                     </div>
 
-                    {/* Steps */}
-                    <div className="flex flex-col gap-6">
+                    {/* Step cards */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         {steps.map((step, index) => (
                             <StepCard key={step.id} step={step} index={index} />
                         ))}
                     </div>
 
                     {/* Bottom CTA */}
-                    <div className="mt-16 text-center">
-                        <div className="bg-gradient-to-r from-slate-900 to-red-950 rounded-3xl p-10 relative overflow-hidden shadow-2xl">
-                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(220,38,38,0.15)_0%,_transparent_70%)]" />
-                            <div className="relative">
-                                <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-3">Ready to begin?</p>
-                                <h3 className="text-3xl font-extrabold text-white mb-4">
+                    <div style={{ marginTop: '4rem', textAlign: 'center' }}>
+                        <div
+                            style={{
+                                background: 'linear-gradient(135deg, #1a0a0a 0%, #1E293B 100%)',
+                                borderRadius: '1.25rem',
+                                padding: '3rem 2rem',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                border: '1px solid rgba(220,38,38,0.2)',
+                                boxShadow: '0 20px 60px rgba(220,38,38,0.1)',
+                            }}
+                        >
+                            <div style={{
+                                position: 'absolute', inset: 0,
+                                background: 'radial-gradient(ellipse at center, rgba(220,38,38,0.12) 0%, transparent 65%)',
+                            }} />
+
+                            {/* Decorative corner lines */}
+                            <div style={{
+                                position: 'absolute', top: 0, left: 0,
+                                width: '4rem', height: '4rem',
+                                borderTop: '2px solid rgba(220,38,38,0.4)',
+                                borderLeft: '2px solid rgba(220,38,38,0.4)',
+                                borderRadius: '0.25rem 0 0 0',
+                            }} />
+                            <div style={{
+                                position: 'absolute', bottom: 0, right: 0,
+                                width: '4rem', height: '4rem',
+                                borderBottom: '2px solid rgba(220,38,38,0.4)',
+                                borderRight: '2px solid rgba(220,38,38,0.4)',
+                                borderRadius: '0 0 0.25rem 0',
+                            }} />
+
+                            <div style={{ position: 'relative' }}>
+                                <p style={{ color: '#DC2626', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                                    Ready to begin?
+                                </p>
+                                <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: 900, color: '#F8FAFC', marginBottom: '1rem', lineHeight: 1.2 }}>
                                     We help you fly, we help you{' '}
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">SOAR</span>
+                                    <span style={{
+                                        backgroundImage: 'linear-gradient(90deg, #DC2626, #F87171)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                    }}>
+                                        SOAR
+                                    </span>
                                 </h3>
-                                <p className="text-white/60 mb-8 max-w-md mx-auto text-sm leading-relaxed">
+                                <p style={{ color: '#64748B', marginBottom: '2rem', maxWidth: '28rem', margin: '0 auto 2rem', fontSize: '0.875rem', lineHeight: 1.7 }}>
                                     Start with Step 1 today and unlock your personalised career path built by industry experts at Talerang.
                                 </p>
                                 <a
                                     href="/login"
-                                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold rounded-xl shadow-lg hover:shadow-red-500/40 hover:-translate-y-1 transition-all duration-200 text-sm"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        padding: '0.85rem 2rem',
+                                        background: 'linear-gradient(135deg, #DC2626, #991B1B)',
+                                        color: '#fff',
+                                        fontWeight: 800,
+                                        fontSize: '0.875rem',
+                                        borderRadius: '0.75rem',
+                                        textDecoration: 'none',
+                                        boxShadow: '0 6px 24px rgba(220,38,38,0.45)',
+                                        transition: 'all 0.2s ease',
+                                        border: 'none',
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.boxShadow = '0 10px 32px rgba(220,38,38,0.6)';
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.boxShadow = '0 6px 24px rgba(220,38,38,0.45)';
+                                        e.currentTarget.style.transform = 'none';
+                                    }}
                                 >
-                                    Start Your Journey <ArrowRight className="w-4 h-4" />
+                                    Start Your Journey <ArrowRight style={{ width: '1rem', height: '1rem' }} />
                                 </a>
                             </div>
                         </div>
